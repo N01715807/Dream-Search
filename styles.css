@@ -189,14 +189,6 @@ section:not(.hero) {
 	border:0;
 }
 
-#dream-form{
-  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-  border:1px solid var(--panel-border);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(6px);
-}
 fieldset{ border:0; padding:0; margin:0 }
 legend{ position:absolute; left:-9999px }
 
@@ -213,24 +205,55 @@ input[type="date"], input[type="text"], textarea{
 }
 textarea{ min-height:120px; resize:vertical }
 input:focus, textarea:focus{
-  border-color:#5da8ff;
+  border-color:var(--accent1);
   box-shadow: 0 0 0 4px rgba(93,168,255,.18), 0 10px 26px rgba(0,0,0,.28);
 }
 
 /* Button bounce feedback */
-#submitBtn{
-  appearance:none; border:0; cursor:pointer;
-  font-weight:700; letter-spacing:.3px;
-  padding:12px 18px; border-radius:999px;
-  color:#0a1120;
-  background: linear-gradient(135deg,#9bd6ff,#c3a5ff 60%, #ffb3da);
-  box-shadow: 0 10px 24px rgba(155,214,255,.25);
-  transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+.glow-btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: .3px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  color: #0a1120;
+  background: linear-gradient(135deg, #9bd6ff, var(--accent1));
+  box-shadow: 0 10px 24px rgba(155, 214, 255, .25);
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s ease, filter .2s ease, box-shadow .25s ease;
 }
-#submitBtn:hover{ filter:brightness(1.05); box-shadow:0 14px 30px rgba(155,214,255,.32) }
-#submitBtn:active{ transform: translateY(1px) scale(.98) }
 
-/* ====== Empty state message ====== */
+/* Glowing Background */
+.glow-btn .glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.4), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Text layer */
+.glow-btn .label {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover to zoom */
+.glow-btn:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 14px 30px rgba(155, 214, 255, .32);
+  transform: scale(1.05);
+}
+
+/* Click to rebound */
+.glow-btn:active {
+  transform: translateY(1px) scale(.96);
+}
+
+/* ====== Dream Cards Gallery ====== */
 
 #gallery-title {
   position: absolute;
@@ -270,7 +293,7 @@ input:focus, textarea:focus{
   overflow: hidden;
 }
 
-/* 鼠标下的光圈跟随（不挡交互） */
+/* Aperture following under the mouse */
 .dream-card::before{
   content:"";
   position:absolute; inset:0;
@@ -285,7 +308,7 @@ input:focus, textarea:focus{
 }
 .dream-card:hover::before{ opacity:1 }
 
-/* 文字与信息 */
+/* Text and information */
 .dream-card header{ transform: translateZ(20px) }
 .dream-card .card-title{
   margin:0 0 .35rem 0;
@@ -307,13 +330,13 @@ input:focus, textarea:focus{
   opacity: .92;
 }
 
-/* 轻微浮动的关键帧（JS 里会随机打散延迟） */
+/* Slightly floating keyframes */
 @keyframes dreamFloat{
   0%{ transform: translateY(0) }
   100%{ transform: translateY(-6px) }
 }
 
-/* 响应式网格 */
+/* Responsive Grid */
 @media (min-width: 768px){
   .cards-container{ grid-template-columns: repeat(2, 1fr) }
 }
@@ -321,6 +344,28 @@ input:focus, textarea:focus{
   .cards-container{ grid-template-columns: repeat(3, 1fr) }
   .dream-card{ border-radius: calc(var(--radius) + 6px) }
   .dream-card .card-title{ font-size: 1.2rem }
+}
+
+.dream-card{
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  transform-origin: center;
+  will-change: transform, box-shadow;
+}
+
+/* Hover glow */
+.dream-card:hover{
+  box-shadow: 0 18px 40px rgba(0,0,0,.45), 0 0 28px rgba(155,214,255,.15);
+  filter: brightness(1.02);
+}
+
+.dream-card:hover::before{
+  opacity: 1;
+  background: radial-gradient(
+    circle at var(--x,50%) var(--y,50%),
+    rgba(255,255,255,0.18) 0%,
+    rgba(255,255,255,0.10) 22%,
+    transparent 58%
+  );
 }
 
 /* ====== Background Layers (pure CSS demo, enhanced visibility) ====== */
